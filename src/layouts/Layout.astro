@@ -1,11 +1,13 @@
 ---
-import AsideMenu from '../components/AsideMenu.astro';
+import { Player } from '@/components/Player'
+import AsideMenu from '../components/AsideMenu.astro'
+import { ViewTransitions } from 'astro:transitions'
 
 interface Props {
-	title: string;
+	title: string
 }
 
-const { title } = Astro.props;
+const { title } = Astro.props
 ---
 
 <!doctype html>
@@ -17,6 +19,7 @@ const { title } = Astro.props;
 		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
 		<meta name='generator' content={Astro.generator} />
 		<title>{title}</title>
+		<ViewTransitions fallback='none' />
 	</head>
 	<body>
 		<div id='app' class='relative h-screen p-2 gap-2 flex items-stretch'>
@@ -26,32 +29,34 @@ const { title } = Astro.props;
 			<main class='[grid-area:main] bg-zinc-900 rounded-lg overflow-y-auto'>
 				<slot />
 			</main>
-			<footer class='[grid-area:player] min-h-[100px]'>PLAYER</footer>
+			<footer class='[grid-area:player] min-h-[100px]'>
+				<Player client:load />
+			</footer>
 		</div>
+		<style>
+			#app {
+				display: grid;
+				grid-template-areas:
+					'aside main main'
+					'player player player';
+				grid-template-columns: 350px 1fr;
+				grid-template-rows: 1fr auto;
+			}
+		</style>
+		<style is:global>
+			html {
+				font-family: 'CircularStd', system-ui, sans-serif;
+				background: #010101;
+				color: white;
+			}
+
+			@font-face {
+				font-family: 'CircularStd';
+				src: url('/fonts/CircularStd-Black.woff2') format('woff2');
+				font-weight: 900;
+				font-style: normal;
+				font-display: swap;
+			}
+		</style>
 	</body>
 </html>
-<style>
-	#app {
-		display: grid;
-		grid-template-areas:
-			'aside main main'
-			'player player player';
-		grid-template-columns: 350px 1fr;
-		grid-template-rows: 1fr auto;
-	}
-</style>
-<style is:global>
-	html {
-		font-family: 'CircularStd', system-ui, sans-serif;
-		background: #010101;
-		color: white;
-	}
-
-	@font-face {
-		font-family: 'CircularStd';
-		src: url('/fonts/CircularStd-Black.woff2') format('woff2');
-		font-weight: 900;
-		font-style: normal;
-		font-display: swap;
-	}
-</style>
